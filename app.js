@@ -2,6 +2,18 @@ var app = Vue.createApp({
 
     data(){
         return {
+            appliedCoupon: null,
+            couponCode: "",
+            coupons: [
+                {
+                    code: "100TAKAOFF",
+                    discount: 100
+                },
+                {
+                    code: "200TAKAOFF",
+                    discount: 200
+                }
+            ],
             seatStates: {
                 sold: {
                     text: "Sold",
@@ -175,6 +187,23 @@ var app = Vue.createApp({
             }
 
             clickSeat.type = clickSeat.type === 'selected' ? 'available' : 'selected';
+        }
+    },
+
+    watch:{
+        couponCode(newValue) {
+            if (newValue.length === 10) {
+                let searchedCoupons = this.coupons.filter(
+                    (item) => item.code === newValue
+                );
+
+                if (searchedCoupons.length === 1) {
+                    this.appliedCoupon = searchedCoupons[0];
+                    this.couponCode = "";
+                } else {
+                    alert("Coupon not valid!");
+                }
+            }
         }
     }
 
