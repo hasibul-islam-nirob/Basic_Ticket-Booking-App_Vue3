@@ -147,13 +147,34 @@ var app = Vue.createApp({
     },
 
     computed:{
+        selectedSeats(){
+            let sc = this.seats.filter((item) => item.type === 'selected');
+            return sc;
+        },
 
+        totalCost() {
+            let tc = 0;
+            this.selectedSeats.forEach((seat) => {
+                tc += seat.price;
+            });
+            return tc;
+        }
     },
 
     methods:{
         handleClick(i){
             let clickSeat = this.seats[i];
-            clickSeat.type = 'selected';
+            if (clickSeat.type === 'sold' || clickSeat.type === 'booked'){
+                alert('You can not select this seat.')
+                return;
+            }
+
+            if (this.selectedSeats.length  > 2){
+                alert('You can not select this seat.');
+                return;
+            }
+
+            clickSeat.type = clickSeat.type === 'selected' ? 'available' : 'selected';
         }
     }
 
