@@ -2,15 +2,18 @@ var app = Vue.createApp({
 
     data(){
         return {
+            confirmed:false,
+            name:'',
+            mobile:'',
             appliedCoupon: null,
             couponCode: "",
             coupons: [
                 {
-                    code: "100TAKAOFF",
+                    code: "100",
                     discount: 100
                 },
                 {
-                    code: "200TAKAOFF",
+                    code: "200",
                     discount: 200
                 }
             ],
@@ -29,10 +32,9 @@ var app = Vue.createApp({
                 },
                 selected: {
                     text: "Selected",
-                    color: "#00ff00"
+                    color: "#1c751c"
                 }
             },
-
             seats: [
                 {
                     name: "A1",
@@ -81,12 +83,12 @@ var app = Vue.createApp({
                 },
                 {
                     name: "C2",
-                    type: "sold",
+                    type: "available",
                     price: 500
                 },
                 {
                     name: "C3",
-                    type: "sold",
+                    type: "available",
                     price: 500
                 },
                 {
@@ -131,7 +133,7 @@ var app = Vue.createApp({
                 },
                 {
                     name: "E4",
-                    type: "booked",
+                    type: "available",
                     price: 300
                 },
                 {
@@ -169,6 +171,10 @@ var app = Vue.createApp({
             this.selectedSeats.forEach((seat) => {
                 tc += seat.price;
             });
+
+            if (this.appliedCoupon !== null){
+                tc -= this.appliedCoupon.discount;
+            }
             return tc;
         }
     },
@@ -181,18 +187,39 @@ var app = Vue.createApp({
                 return;
             }
 
-            if (this.selectedSeats.length  > 2){
+            if (clickSeat.type !== 'available' && this.selectedSeats.length  >= 4){
+                clickSeat.type = clickSeat.type === 'selected' ? 'available' : '';
                 alert('You can not select this seat.');
                 return;
             }
 
             clickSeat.type = clickSeat.type === 'selected' ? 'available' : 'selected';
+        },
+
+        confirm() {
+            if (!this.name || !this.mobile) {
+                alert("Please enter name and mobile");
+                return;
+            }
+            this.confirmed = true;
+        },
+
+        resetData() {
+            this.confirmed = false;
+            this.name = "";
+            this.mobile = "";
+            this.appliedCoupon = null;
+            this.seats.forEach((seat) => {
+                if (seat.type === "selected") {
+                    seat.type = "sold";
+                }
+            });
         }
     },
 
     watch:{
         couponCode(newValue) {
-            if (newValue.length === 10) {
+            if (newValue.length >= 3) {
                 let searchedCoupons = this.coupons.filter(
                     (item) => item.code === newValue
                 );

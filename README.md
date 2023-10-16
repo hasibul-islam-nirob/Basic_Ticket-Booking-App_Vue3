@@ -1,4 +1,5 @@
-# Basic Ticket Booking App UsingVUE 3
- Ticket Booking App
+# Basic Ticket Booking App Using VUE 3
 
->-------------------Start--------------------
+
+>
+<img src="./Basic-Ticket-Booking-App.png">
